@@ -2,10 +2,13 @@ import pyrosim.pyrosim as pyrosim
 
 def Create_World():
 	pyrosim.Start_SDF("world.sdf")
-	
 	# Create a link in world
-	pyrosim.Send_Cube(name="Box", pos=[x, y, z], size=[length, width, height])
+	Box = pyrosim.Send_Cube(name="Box", pos=[x, y, z], size=[length, width, height])
+	pyrosim.End()
 
+def Create_Robot():
+	pyrosim.Start_URDF("body.urdf")
+	Torso = pyrosim.Send_Cube(name="Box", pos=[x, y, z], size=[length, width, height])
 	pyrosim.End()
 
 # Set link size vars
@@ -19,3 +22,4 @@ y = 0
 z = 0.5
 
 Create_World()
+Create_Robot()
