@@ -15,8 +15,11 @@ p.setGravity(0,0,-9.8)
 # Add floor
 planeId = p.loadURDF("plane.urdf")
 
-# Add a link
-p.loadSDF("box.sdf")
+# Add links
+p.loadSDF("world.sdf")
+
+# Add robot
+robotId = p.loadURDF("body.urdf")
 
 for i in range(1000):
 	time.sleep(1/60)
