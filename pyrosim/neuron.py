@@ -1,5 +1,7 @@
 import math
 
+import numpy
+
 import pybullet
 
 import pyrosim.pyrosim as pyrosim
@@ -44,6 +46,9 @@ class NEURON:
 
         return self.type == c.SENSOR_NEURON
 
+    def Update_Sensor_Neuron(self):
+        self.Set_Value(pyrosim.Get_Touch_Sensor_Value_For_Link(self.Get_Link_Name()))
+
     def Is_Hidden_Neuron(self):
 
         return self.type == c.HIDDEN_NEURON
@@ -51,6 +56,9 @@ class NEURON:
     def Is_Motor_Neuron(self):
 
         return self.type == c.MOTOR_NEURON
+
+    def Update_Hidden_Or_Motor_Neuron(self):
+        self.Set_Value(0.0)
 
     def Print(self):
 
