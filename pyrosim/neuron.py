@@ -57,8 +57,30 @@ class NEURON:
 
         return self.type == c.MOTOR_NEURON
 
-    def Update_Hidden_Or_Motor_Neuron(self):
+    def Update_Hidden_Or_Motor_Neuron(self, neurons, synapses):
+        # First initialize neuron's value to 0
         self.Set_Value(0.0)
+        
+        firstKey = list(synapses.keys())[0]
+        # Print the postsynaptic value before value updates
+        print("Postsyn Val:", neurons[firstKey[1]].Get_Value())
+        for synapseNeurons in synapses.keys():
+            # If the synapse's postsynaptic neuron (2nd item in the synapse tuple)
+            # is equal to the currently-updating neuron 
+            if synapseNeurons[1] == self.Get_Name():
+                # Save the weight of the current synapse
+                synapseWeight = synapses[synapseNeurons].Get_Weight()
+                # Save the value of the current synapse's presynaptic neuron
+                presynapticValue = neurons[synapseNeurons[0]].Get_Value()
+                self.Allow_Presynaptic_Neuron_To_Influence_Me(synapseWeight, presynapticValue)
+        
+        # Print the postsynaptic value after value updates
+        print("Postsyn Val:", neurons[firstKey[1]].Get_Value())
+        exit()
+    
+    def Allow_Presynaptic_Neuron_To_Influence_Me(self, synapseWeight, presynapticValue):
+        # Add result to the value of the postsynaptic neuron
+        self.Add_To_Value(presynapticValue * synapseWeight)
 
     def Print(self):
 
