@@ -3,7 +3,7 @@ import pyrosim.pyrosim as pyrosim
 def Create_World():
 	pyrosim.Start_SDF("world.sdf")
 	# Create a link in world
-	pyrosim.Send_Cube(name="Box", pos=[x - 3, y + 3, z], size=[length, width, height])
+	pyrosim.Send_Cube(name="Box", pos=[-3, 3, 0.5], size=[length, width, height])
 	pyrosim.End()
 
 def Generate_Body():
@@ -28,6 +28,7 @@ def Generate_Brain():
 	
 	pyrosim.Send_Motor_Neuron( name = 3 , jointName = "Torso_BackLeg")
 	pyrosim.Send_Motor_Neuron( name = 4 , jointName = "Torso_FrontLeg")
+	pyrosim.Send_Synapse( sourceNeuronName = 1 , targetNeuronName = 3 , weight = 1.0 )
 	pyrosim.End()
 
 # Set link size vars
