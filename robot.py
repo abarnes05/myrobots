@@ -27,7 +27,9 @@ class ROBOT:
 			self.sensors[i].Get_Value(t)
 
 	def Think(self):
+		# Update the neuron values in the neural network
 		self.nn.Update()
+		# Prints the neuron values in the neural network
 		self.nn.Print()
 
 	def Prepare_To_Act(self):
@@ -36,10 +38,16 @@ class ROBOT:
 		for jointName in pyrosim.jointNamesToIndices:
 			self.motors[jointName] = MOTOR(jointName, self.time_steps)
 
-	def Act(self, t):
+	def Act(self):
+		# For every neuron in the neural network
 		for neuronName in self.nn.Get_Neuron_Names():
+			# Check if it's a motor neuron
 			if self.nn.Is_Motor_Neuron(neuronName):
+				# Save the name of motor neuron's joint
 				jointName = self.nn.Get_Motor_Neurons_Joint(neuronName).encode("utf-8")
+				# Set the desiredAngle to the value of motor neuron
 				desiredAngle = self.nn.Get_Value_Of(neuronName)
+				# Update the motorized joint value so it will apply torque 
+				# to it's links based on desiredAngle
 				self.motors[jointName].Set_Value(self.robotId, desiredAngle)
 				jointName = jointName.decode("utf-8")
