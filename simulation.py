@@ -9,20 +9,26 @@ from robot import ROBOT
 class SIMULATION:
 	def __init__(self):
 		self.physicsClient = p.connect(p.GUI)
-		# Help run faster
+		# Help simulation run faster
 		p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath())
 		p.setGravity(0,0,-9.8)
+		# Initialize WORLD object
 		self.world = WORLD()
+		# Initialize ROBOT object
 		self.robot = ROBOT(1000)
 	
 	def Run(self):
 		for t in range(1000):
 			time.sleep(1/60)
+			# Step simulation at every time-step
 			p.stepSimulation()
+			# Call Sense() to get sensor values
 			self.robot.Sense(t)
+			# Call Think() to update and print neuron values
 			self.robot.Think()
-			self.robot.Act(t)
+			# Call Act() to
+			self.robot.Act()
 
 	def __del__(self):
 		p.disconnect()
