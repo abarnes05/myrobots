@@ -1,12 +1,12 @@
+import constants as c
 import numpy
 import pyrosim.pyrosim as pyrosim
 
 class SENSOR:
-	def __init__(self, linkName, time_steps):
+	def __init__(self, linkName):
 		self.linkName = linkName
-		self.time_steps = time_steps
 		# Create vector to store sensor values
-		self.values = numpy.zeros(self.time_steps)
+		self.values = numpy.zeros(c.numTimeSteps)
 
 	def Get_Value(self, t):
 		self.values[t] = pyrosim.Get_Touch_Sensor_Value_For_Link(self.linkName)
