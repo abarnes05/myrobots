@@ -27,7 +27,7 @@ class SIMULATION:
 			self.robot.Sense(t)
 			# Call Think() to update and print neuron values
 			self.robot.Think()
-			# Call Act() to
+			# Call Act() to have motors move the robot's joints based on the motor neurons' values
 			self.robot.Act()
 
 	def __del__(self):
