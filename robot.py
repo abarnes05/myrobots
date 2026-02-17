@@ -8,11 +8,10 @@ from motor import MOTOR
 from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 class ROBOT:
-	def __init__(self, time_steps):
-		self.time_steps = time_steps
-		self.robotId = p.loadURDF("body.urdf")
+	def __init__(self):
+		self.robot = p.loadURDF("body.urdf")
 		self.nn = NEURAL_NETWORK("brain.nndf")
-		pyrosim.Prepare_To_Simulate(self.robotId)
+		pyrosim.Prepare_To_Simulate(self.robot)
 		self.Prepare_To_Sense()
 		self.Prepare_To_Act()
 
@@ -20,7 +19,7 @@ class ROBOT:
 		self.sensors = {}
 
 		for linkName in pyrosim.linkNamesToIndices:
-			self.sensors[linkName] = SENSOR(linkName, self.time_steps)
+			self.sensors[linkName] = SENSOR(linkName)
 
 	def Sense(self, t):
 		for i in self.sensors:
@@ -36,7 +35,7 @@ class ROBOT:
 		self.motors = {}
 
 		for jointName in pyrosim.jointNamesToIndices:
-			self.motors[jointName] = MOTOR(jointName, self.time_steps)
+			self.motors[jointName] = MOTOR(jointName)
 
 	def Act(self):
 		# For every neuron in the neural network
@@ -49,5 +48,20 @@ class ROBOT:
 				desiredAngle = self.nn.Get_Value_Of(neuronName)
 				# Update the motorized joint value so it will apply torque 
 				# to it's links based on desiredAngle
-				self.motors[jointName].Set_Value(self.robotId, desiredAngle)
+				self.motors[jointName].Set_Value(self.robot, desiredAngle)
 				jointName = jointName.decode("utf-8")
+	
+	def Get_Fitness(self):
+		# Get the state of link 0
+		stateOfLinkZero = p.getLinkState(self.robot, 0)
+		# Get the position of link 0
+		positionOfLinkZero = stateOfLinkZero[0]
+		# Get the x-coord of link 0
+		xCoordinateOfLinkZero = positionOfLinkZero[0]
+		print(xCoordinateOfLinkZero)
+		
+		# Write the x-coord of link 0 to a file
+		with open("fitness.txt", "w") as fitnessFile:
+  			fitnessFile.write(str(xCoordinateOfLinkZero))
+		
+		# exit()
