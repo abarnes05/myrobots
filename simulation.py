@@ -1,3 +1,4 @@
+import constants as c
 import pybullet as p
 import pybullet_data
 import pyrosim.pyrosim as pyrosim
@@ -16,10 +17,10 @@ class SIMULATION:
 		# Initialize WORLD object
 		self.world = WORLD()
 		# Initialize ROBOT object
-		self.robot = ROBOT(1000)
+		self.robot = ROBOT()
 	
 	def Run(self):
-		for t in range(1000):
+		for t in range(c.numTimeSteps):
 			time.sleep(1/60)
 			# Step simulation at every time-step
 			p.stepSimulation()
@@ -29,6 +30,9 @@ class SIMULATION:
 			self.robot.Think()
 			# Call Act() to have motors move the robot's joints based on the motor neurons' values
 			self.robot.Act()
+	
+	def Get_Fitness(self):
+		self.robot.Get_Fitness()
 
 	def __del__(self):
 		p.disconnect()
