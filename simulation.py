@@ -8,8 +8,13 @@ from world import WORLD
 from robot import ROBOT
 
 class SIMULATION:
-	def __init__(self):
-		self.physicsClient = p.connect(p.GUI)
+	def __init__(self, directOrGUI):
+		self.directOrGUI = directOrGUI
+		if self.directOrGUI == "DIRECT":
+			self.physicsClient = p.connect(p.DIRECT)
+		else:
+			self.physicsClient = p.connect(p.GUI)
+
 		# Help simulation run faster
 		p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -21,7 +26,8 @@ class SIMULATION:
 	
 	def Run(self):
 		for t in range(c.numTimeSteps):
-			time.sleep(1/60)
+			if self.directOrGUI == "GUI":
+				time.sleep(1/60)
 			# Step simulation at every time-step
 			p.stepSimulation()
 			# Call Sense() to get sensor values
