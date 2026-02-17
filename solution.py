@@ -1,4 +1,5 @@
 import numpy
+import random
 import pyrosim.pyrosim as pyrosim
 import os
 
@@ -14,6 +15,16 @@ class SOLUTION:
         self.Create_Brain()
         # Run os command
         os.system("python3 simulate.py")
+        # Read fitness from file
+        with open("fitness.txt") as fitnessFile:
+            self.fitness = float(fitnessFile.read())
+
+    def Mutate(self):
+        # Select a random row and column from the matrix of synapse weights
+        randomRow = random.randint(0, 2)
+        randomColumn = random.randint(0, 1)
+        # Randomly generate a new value for a randomly chosen synapse weight
+        self.weights[randomRow, randomColumn] = random.random() * 2 - 1
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
