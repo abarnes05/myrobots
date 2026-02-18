@@ -2,22 +2,33 @@ import numpy
 import random
 import pyrosim.pyrosim as pyrosim
 import os
+import time
 
 class SOLUTION:
-    def __init__(self):
+    def __init__(self, nextAvailableID):
+        self.myID = nextAvailableID
+        
         # Randomly generate synaptic weights in the range of [-1, 1]
         self.weights = numpy.random.rand(3, 2)
         self.weights = 2 * self.weights - 1
-
-    def Evaluate(self, directOrGUI):
+        
+    def Start_Simulation(self, directOrGUI):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
         # Run os command
-        os.system("python3 simulate.py " + directOrGUI)
+        os.system("python3 simulate.py " + directOrGUI + " " + str(self.myID) + " &")
+
+    def Wait_For_Simulation_To_End(self):
+        while not os.path.exists(f"fitness{self.myID}.txt"):
+            time.sleep(0.01)
+
         # Read fitness from file
-        with open("fitness.txt") as fitnessFile:
+        with open(f"fitness{self.myID}.txt") as fitnessFile:
             self.fitness = float(fitnessFile.read())
+        
+        os.system(f"rm fitness{self.myID}.txt")
+
 
     def Mutate(self):
         # Select a random row and column from the matrix of synapse weights
@@ -25,6 +36,10 @@ class SOLUTION:
         randomColumn = random.randint(0, 1)
         # Randomly generate a new value for a randomly chosen synapse weight
         self.weights[randomRow, randomColumn] = random.random() * 2 - 1
+
+    def Set_ID(self, nextAvailableID):
+        self.myID = nextAvailableID
+
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -47,7 +62,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
 
         # Create sensor neurons
         pyrosim.Send_Sensor_Neuron(name = 0 , linkName = "Torso")
