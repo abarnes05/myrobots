@@ -29,7 +29,7 @@ class ROBOT:
 		# Update the neuron values in the neural network
 		self.nn.Update()
 		# Prints the neuron values in the neural network
-		self.nn.Print()
+		# self.nn.Print()
 
 	def Prepare_To_Act(self):
 		self.motors = {}
@@ -63,5 +63,3 @@ class ROBOT:
 		# Write the x-coord of link 0 to a file
 		with open("fitness.txt", "w") as fitnessFile:
   			fitnessFile.write(str(xCoordinateOfLinkZero))
-		
-		# exit()
