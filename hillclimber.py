@@ -45,6 +45,3 @@ class HILL_CLIMBER:
     def Show_Best(self):
         # Evaluate the parent
         self.parent.Evaluate("GUI")
-
-
-    
