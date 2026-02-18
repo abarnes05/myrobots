@@ -8,7 +8,7 @@ from world import WORLD
 from robot import ROBOT
 
 class SIMULATION:
-	def __init__(self, directOrGUI):
+	def __init__(self, directOrGUI, solutionID):
 		self.directOrGUI = directOrGUI
 		if self.directOrGUI == "DIRECT":
 			self.physicsClient = p.connect(p.DIRECT)
@@ -22,7 +22,7 @@ class SIMULATION:
 		# Initialize WORLD object
 		self.world = WORLD()
 		# Initialize ROBOT object
-		self.robot = ROBOT()
+		self.robot = ROBOT(solutionID)
 	
 	def Run(self):
 		for t in range(c.numTimeSteps):
@@ -37,8 +37,8 @@ class SIMULATION:
 			# Call Act() to have motors move the robot's joints based on the motor neurons' values
 			self.robot.Act()
 	
-	def Get_Fitness(self):
-		self.robot.Get_Fitness()
+	def Get_Fitness(self, solutionID):
+		self.robot.Get_Fitness(solutionID)
 
 	def __del__(self):
 		p.disconnect()
