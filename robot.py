@@ -1,6 +1,5 @@
 import constants as c
 import pybullet as p
-import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import numpy
 import os
@@ -10,13 +9,13 @@ from motor import MOTOR
 from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 class ROBOT:
-	def __init__(self, solutionID):
-		self.robot = p.loadURDF("body.urdf")
-		self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
+	def __init__(self):
+		self.robot = p.loadURDF("body.urdf", basePosition=[0,0,0], useFixedBase=True)
+		# self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
 		pyrosim.Prepare_To_Simulate(self.robot)
 		self.Prepare_To_Sense()
-		self.Prepare_To_Act()
-		os.system(f"rm brain{solutionID}.nndf")
+		# self.Prepare_To_Act()
+		# os.system(f"rm brain{solutionID}.nndf")
 
 	def Prepare_To_Sense(self):
 		self.sensors = {}
@@ -40,19 +39,22 @@ class ROBOT:
 		for jointName in pyrosim.jointNamesToIndices:
 			self.motors[jointName] = MOTOR(jointName)
 
-	def Act(self):
+	def Act(self, t):
+		for i in self.motors:
+			self.motors[i].Set_Value(self.robot, t)
+		
 		# For every neuron in the neural network
-		for neuronName in self.nn.Get_Neuron_Names():
-			# Check if it's a motor neuron
-			if self.nn.Is_Motor_Neuron(neuronName):
-				# Save the name of motor neuron's joint
-				jointName = self.nn.Get_Motor_Neurons_Joint(neuronName).encode("utf-8")
-				# Set the desiredAngle to the value of motor neuron
-				desiredAngle = self.nn.Get_Value_Of(neuronName) * c.motorJointRange
-				# Update the motorized joint value so it will apply torque 
-				# to it's links based on desiredAngle
-				self.motors[jointName].Set_Value(self.robot, desiredAngle)
-				jointName = jointName.decode("utf-8")
+		# for neuronName in self.nn.Get_Neuron_Names():
+		# 	# Check if it's a motor neuron
+		# 	if self.nn.Is_Motor_Neuron(neuronName):
+		# 		# Save the name of motor neuron's joint
+		# 		jointName = self.nn.Get_Motor_Neurons_Joint(neuronName).encode("utf-8")
+		# 		# Set the desiredAngle to the value of motor neuron
+		# 		desiredAngle = self.nn.Get_Value_Of(neuronName) * c.motorJointRange
+		# 		# Update the motorized joint value so it will apply torque 
+		# 		# to it's links based on desiredAngle
+		# 		self.motors[jointName].Set_Value(self.robot, desiredAngle)
+		# 		jointName = jointName.decode("utf-8")
 	
 	def Get_Fitness(self, solutionID):
 		# Get the state of link 0
