@@ -1,9 +1,8 @@
-import os
-from hillclimber import HILL_CLIMBER
+from parallelHillClimber import PARALLEL_HILL_CLIMBER
 
 # Create a HILL_CLIMBER object
-hc = HILL_CLIMBER()
+phc = PARALLEL_HILL_CLIMBER()
 # Run the hill climber simulation
-hc.Evolve()
+phc.Evolve()
 # Visually displays the last generation's parent (the best fitness)
-hc.Show_Best()
+phc.Show_Best()
