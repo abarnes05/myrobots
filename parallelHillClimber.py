@@ -7,7 +7,7 @@ class PARALLEL_HILL_CLIMBER:
     def __init__(self):
         # Delete all temporary files when search.py starts
         os.system("rm brain*.nndf")
-        os.system("rm fitness*.nndf")
+        os.system("rm fitness*.txt")
         
         self.parents = {}
         self.nextAvailableID = 0
@@ -18,7 +18,7 @@ class PARALLEL_HILL_CLIMBER:
     def Evaluate(self, solutions):
         # Evaluate the parents/children
         for i in solutions.keys():
-            solutions[i].Start_Simulation("DIRECT")
+            solutions[i].Start_Simulation("Direct")
             
         for i in solutions.keys():
             solutions[i].Wait_For_Simulation_To_End()
@@ -37,7 +37,7 @@ class PARALLEL_HILL_CLIMBER:
         # Evaluate the child
         self.Evaluate(self.children)
         # Print the parent's and child's fitness
-        self.Print()
+        # self.Print()
         # Select the better fitness
         self.Select()
 
@@ -68,6 +68,7 @@ class PARALLEL_HILL_CLIMBER:
         
 
     def Show_Best(self):
+        pass
         # self.parent.Evaluate("GUI")
-        lowestFitnessParent = min(self.parents.values(), key=lambda parent: parent.fitness)
-        lowestFitnessParent.Start_Simulation("GUI")
+        # lowestFitnessParent = min(self.parents.values(), key=lambda parent: parent.fitness)
+        # lowestFitnessParent.Start_Simulation("GUI")
