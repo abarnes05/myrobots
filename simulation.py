@@ -3,13 +3,14 @@ import pybullet as p
 import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import time
+import numpy
 
 from world import WORLD
 from robot import ROBOT
 
 class SIMULATION:
-	def __init__(self, directOrGUI, solutionID):
-		self.directOrGUI = directOrGUI
+	def __init__(self):
+		self.directOrGUI = "GUI"
 		if self.directOrGUI == "DIRECT":
 			self.physicsClient = p.connect(p.DIRECT)
 		else:
@@ -22,9 +23,11 @@ class SIMULATION:
 		# Initialize WORLD object
 		self.world = WORLD()
 		# Initialize ROBOT object
-		self.robot = ROBOT(solutionID)
+		self.robot = ROBOT()
 	
 	def Run(self):
+		handSensorValues = numpy.zeros(1000)
+		
 		for t in range(c.numTimeSteps):
 			if self.directOrGUI == "GUI":
 				time.sleep(1/60)
@@ -32,10 +35,12 @@ class SIMULATION:
 			p.stepSimulation()
 			# Call Sense() to get sensor values
 			self.robot.Sense(t)
+			handSensorValues[t] = pyrosim.Get_Touch_Sensor_Value_For_Link("Hand")
+			print(handSensorValues[t])
 			# Call Think() to update and print neuron values
-			self.robot.Think()
+			# self.robot.Think()
 			# Call Act() to have motors move the robot's joints based on the motor neurons' values
-			self.robot.Act()
+			# self.robot.Act()
 	
 	def Get_Fitness(self, solutionID):
 		self.robot.Get_Fitness(solutionID)
