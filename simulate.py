@@ -1,5 +1,4 @@
 import sys
-import pyrosim
 from simulation import SIMULATION
 
 directOrGUI = sys.argv[1]
