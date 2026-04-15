@@ -18,7 +18,7 @@ class PARALLEL_HILL_CLIMBER:
     def Evaluate(self, solutions):
         # Evaluate the parents/children
         for i in solutions.keys():
-            solutions[i].Start_Simulation("Direct")
+            solutions[i].Start_Simulation("DIRECT")
             
         for i in solutions.keys():
             solutions[i].Wait_For_Simulation_To_End()
@@ -37,7 +37,7 @@ class PARALLEL_HILL_CLIMBER:
         # Evaluate the child
         self.Evaluate(self.children)
         # Print the parent's and child's fitness
-        # self.Print()
+        self.Print()
         # Select the better fitness
         self.Select()
 
@@ -63,12 +63,10 @@ class PARALLEL_HILL_CLIMBER:
     def Select(self):
         # If the child has better fitness than the parent, the child becomes the parent
         for key in self.parents.keys():
-            if self.parents[key].fitness > self.children[key].fitness:
+            if self.parents[key].fitness < self.children[key].fitness:
                 self.parents[key] = self.children[key]
         
 
     def Show_Best(self):
-        pass
-        # self.parent.Evaluate("GUI")
-        # lowestFitnessParent = min(self.parents.values(), key=lambda parent: parent.fitness)
-        # lowestFitnessParent.Start_Simulation("GUI")
+        bestFitnessParent = max(self.parents.values(), key=lambda parent: parent.fitness)
+        bestFitnessParent.Start_Simulation("GUI")
