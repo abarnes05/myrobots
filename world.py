@@ -5,3 +5,4 @@ class WORLD:
 	def __init__(self):
 		self.planeId = p.loadURDF("plane.urdf")
 		self.worldId = p.loadSDF("world.sdf")
+		self.ballID = self.worldId[0]
