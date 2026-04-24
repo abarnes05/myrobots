@@ -2,16 +2,16 @@ import constants as c
 import pybullet as p
 import pyrosim.pyrosim as pyrosim
 import os
+import numpy
 
 from sensor import SENSOR
 from motor import MOTOR
 from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 class ROBOT:
-	def __init__(self, solutionID, ballID):
+	def __init__(self, solutionID):
 		self.robot = p.loadURDF("body.urdf", basePosition=[0,0,0], useFixedBase=True)
 		self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
-		self.ball = ballID
 		pyrosim.Prepare_To_Simulate(self.robot)
 		self.Prepare_To_Sense()
 		self.Prepare_To_Act()
@@ -52,16 +52,26 @@ class ROBOT:
 				self.motors[jointName].Set_Value(self.robot, desiredAngle)
 				jointName = jointName.decode("utf-8")
 	
-	def Get_Fitness(self, solutionID):
-		# Get the position and orientation of the ball
-		ballPositionAndOrientation = p.getBasePositionAndOrientation(self.ball)
-		# Get the position of the ball
-		ballPosition = ballPositionAndOrientation[0]
-		# Get the horizontal pos of the ball
-		yPosition = ballPosition[1]
+	# def Get_Fitness(self, solutionID, landingY):
 		
+	# 	fitness = landingY
+
+	# 	# Write the y-coord of ball to a file
+	# 	with open(f"tmp{solutionID}.txt", "w") as fitnessFile:
+	# 		fitnessFile.write(str(fitness))
+		
+	# 	os.system(f"mv tmp{solutionID}.txt fitness{solutionID}.txt")
+
+	def Get_Fitness(self, solutionID, ballYPositions, ballZPositions):
+
+		maxZPosition = numpy.max(ballZPositions)
+		finalYPosition = ballYPositions[-1]
+
+		# fitness = finalYPosition
+		fitness = finalYPosition + maxZPosition
+
 		# Write the y-coord of ball to a file
 		with open(f"tmp{solutionID}.txt", "w") as fitnessFile:
-			fitnessFile.write(str(yPosition))
+			fitnessFile.write(str(fitness))
 		
 		os.system(f"mv tmp{solutionID}.txt fitness{solutionID}.txt")
